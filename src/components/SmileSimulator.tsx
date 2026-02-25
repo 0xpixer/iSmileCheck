@@ -67,7 +67,7 @@ export function SmileSimulator() {
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6">
-      <section className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-8">
+      <section className="rounded-3xl border border-orange-100 bg-white p-5 sm:p-8">
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
           Orthodontic Smile Simulation
         </h1>
@@ -100,7 +100,7 @@ export function SmileSimulator() {
       {isLoading ? <LoadingState /> : null}
 
       {beforeImageUrl && afterImageUrl ? (
-        <section className="space-y-3 rounded-3xl border border-orange-100 bg-white p-4 shadow-sm sm:p-6">
+        <section className="space-y-3 rounded-3xl border border-orange-100 bg-white p-4 sm:p-6">
           <BeforeAfterSlider
             beforeSrc={beforeImageUrl}
             afterSrc={afterImageUrl}

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Orthodontic Smile Simulator",
+  title: "iSmile Check",
   description: "Web-based orthodontic before and after smile simulation.",
 };
 
