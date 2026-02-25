@@ -31,6 +31,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Push this repo to GitHub and import it in [Vercel](https://vercel.com/new).
+2. Add environment variables in the Vercel project settings:
+   - **`GEMINI_API_KEY`** (required) — get an API key from [Google AI Studio](https://aistudio.google.com/apikey).
+   - Optionally: `GEMINI_VALIDATION_MODEL`, `GEMINI_IMAGE_MODEL` (default: `gemini-2.5-flash`).
+3. Deploy. The simulate API may take 10–30 seconds; the route is configured with `maxDuration: 60` for Vercel Pro. On the Hobby plan (10s limit), long runs may time out.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+For local development, copy `.env.example` to `.env.local` and set `GEMINI_API_KEY`.
+
+See [Next.js deployment docs](https://nextjs.org/docs/app/building-your-application/deploying) for more.
