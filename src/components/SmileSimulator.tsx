@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { BeforeAfterSlider } from "@/components/BeforeAfterSlider";
 import { ImageUploader } from "@/components/ImageUploader";
+import { LeadForm, type LeadFormData } from "@/components/LeadForm";
 import { LoadingState } from "@/components/LoadingState";
 
 type SimulateResponse = {
@@ -13,6 +14,7 @@ export function SmileSimulator() {
   const [sourceFile, setSourceFile] = useState<File | null>(null);
   const [beforeImageUrl, setBeforeImageUrl] = useState<string | null>(null);
   const [afterImageUrl, setAfterImageUrl] = useState<string | null>(null);
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sliderValue, setSliderValue] = useState(50);
@@ -99,7 +101,15 @@ export function SmileSimulator() {
 
       {isLoading ? <LoadingState /> : null}
 
-      {beforeImageUrl && afterImageUrl ? (
+      {beforeImageUrl && afterImageUrl && !formSubmitted ? (
+        <LeadForm
+          onSubmit={(data: LeadFormData) => {
+            setFormSubmitted(true);
+          }}
+        />
+      ) : null}
+
+      {beforeImageUrl && afterImageUrl && formSubmitted ? (
         <section className="space-y-3 rounded-3xl border border-orange-100 bg-white p-4 sm:p-6">
           <BeforeAfterSlider
             beforeSrc={beforeImageUrl}
