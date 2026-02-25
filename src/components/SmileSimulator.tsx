@@ -69,7 +69,7 @@ export function SmileSimulator() {
     <div className="mx-auto w-full max-w-4xl space-y-6">
       <section className="rounded-3xl border border-orange-100 bg-white p-5 sm:p-8">
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
-          Orthodontic Smile Simulation
+          iSmile Simulation
         </h1>
         <p className="mt-2 text-sm leading-6 text-slate-600 sm:text-base">
           Upload a clear front-facing smile photo to preview a realistic orthodontic
