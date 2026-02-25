@@ -82,14 +82,16 @@ export function SmileSimulator() {
           <ImageUploader onFileSelect={setSourceFile} disabled={isLoading} />
         </div>
 
-        <button
-          type="button"
-          onClick={simulateSmile}
-          disabled={isLoading || !sourceFile}
-          className="mt-6 w-full rounded-xl bg-[#F75202] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#E04A00] disabled:cursor-not-allowed disabled:bg-orange-300"
-        >
-          {isLoading ? "Processing..." : "See My Future Smile"}
-        </button>
+        {!(afterImageUrl && !formSubmitted) ? (
+          <button
+            type="button"
+            onClick={simulateSmile}
+            disabled={isLoading || !sourceFile}
+            className="mt-6 w-full rounded-xl bg-[#F75202] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#E04A00] disabled:cursor-not-allowed disabled:bg-orange-300"
+          >
+            {isLoading ? "Processing..." : "See My Future Smile"}
+          </button>
+        ) : null}
 
         {error ? (
           <div className="mt-3 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2">
