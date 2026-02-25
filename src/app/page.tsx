@@ -10,7 +10,7 @@ export default function Home() {
           alt="iSmile Check"
           width={280}
           height={140}
-          className="max-h-[140px] w-auto object-contain"
+          className="h-auto max-w-[140px] object-contain"
         />
       </div>
       <SmileSimulator />
