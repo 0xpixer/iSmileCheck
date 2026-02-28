@@ -5,9 +5,7 @@ import type { CountryCode } from "@/lib/postcodes";
 import { getAreasForPostcode } from "@/lib/postcodes";
 
 export type LeadFormData = {
-  givenName: string;
-  surname: string;
-  gender: string;
+  name: string;
   phone: string;
   email: string;
   country: CountryCode;
@@ -16,9 +14,7 @@ export type LeadFormData = {
 };
 
 const INITIAL_FORM: LeadFormData = {
-  givenName: "",
-  surname: "",
-  gender: "",
+  name: "",
   phone: "",
   email: "",
   country: "SG",
@@ -66,9 +62,7 @@ export function LeadForm({ onSubmit }: LeadFormProps) {
 
   const validate = useCallback((): boolean => {
     const next: Partial<Record<keyof LeadFormData, string>> = {};
-    if (!form.givenName.trim()) next.givenName = "Required";
-    if (!form.surname.trim()) next.surname = "Required";
-    if (!form.gender.trim()) next.gender = "Please select gender";
+    if (!form.name.trim()) next.name = "Required";
     if (!form.phone.trim()) next.phone = "Required";
     else if (!/^[\d\s\-+()]+$/.test(form.phone)) next.phone = "Invalid phone number";
     if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
@@ -99,60 +93,21 @@ export function LeadForm({ onSubmit }: LeadFormProps) {
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label htmlFor="givenName" className="mb-1 block text-sm font-medium text-slate-700">
-              Given name <span className="text-red-500">*</span>
-            </label>
-            <input
-              id="givenName"
-              type="text"
-              value={form.givenName}
-              onChange={(e) => update("givenName", e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-[#F75202] focus:outline-none focus:ring-1 focus:ring-[#F75202]"
-              placeholder="e.g. John"
-              autoComplete="given-name"
-            />
-            {errors.givenName ? (
-              <p className="mt-1 text-xs text-red-600">{errors.givenName}</p>
-            ) : null}
-          </div>
-          <div>
-            <label htmlFor="surname" className="mb-1 block text-sm font-medium text-slate-700">
-              Surname <span className="text-red-500">*</span>
-            </label>
-            <input
-              id="surname"
-              type="text"
-              value={form.surname}
-              onChange={(e) => update("surname", e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-[#F75202] focus:outline-none focus:ring-1 focus:ring-[#F75202]"
-              placeholder="e.g. Tan"
-              autoComplete="family-name"
-            />
-            {errors.surname ? (
-              <p className="mt-1 text-xs text-red-600">{errors.surname}</p>
-            ) : null}
-          </div>
-        </div>
-
         <div>
-          <label className="mb-1 block text-sm font-medium text-slate-700">
-            Gender <span className="text-red-500">*</span>
+          <label htmlFor="name" className="mb-1 block text-sm font-medium text-slate-700">
+            Name <span className="text-red-500">*</span>
           </label>
-          <select
-            value={form.gender}
-            onChange={(e) => update("gender", e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-[#F75202] focus:outline-none focus:ring-1 focus:ring-[#F75202]"
-            aria-invalid={!!errors.gender}
-          >
-            <option value="">Select gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-          {errors.gender ? (
-            <p className="mt-1 text-xs text-red-600">{errors.gender}</p>
+          <input
+            id="name"
+            type="text"
+            value={form.name}
+            onChange={(e) => update("name", e.target.value)}
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-[#F75202] focus:outline-none focus:ring-1 focus:ring-[#F75202]"
+            placeholder="e.g. John Tan"
+            autoComplete="name"
+          />
+          {errors.name ? (
+            <p className="mt-1 text-xs text-red-600">{errors.name}</p>
           ) : null}
         </div>
 
