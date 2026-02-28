@@ -225,14 +225,64 @@ export function ImageUploader({ onFileSelect, disabled = false }: ImageUploaderP
           aria-modal="true"
           aria-label="Take a photo"
         >
-          <div className="relative flex-1">
+          <div className="relative flex-1 flex items-center justify-center overflow-hidden">
             <video
               ref={videoRef}
               autoPlay
               playsInline
               muted
-              className="h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover"
             />
+            {!cameraError ? (
+              <div
+                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                aria-hidden
+              >
+                <svg
+                  viewBox="0 0 200 260"
+                  className="w-[85%] max-w-[320px] text-white/70"
+                  preserveAspectRatio="xMidYMid meet"
+                >
+                  {/* Face oval */}
+                  <ellipse
+                    cx="100"
+                    cy="120"
+                    rx="82"
+                    ry="105"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeDasharray="6 4"
+                  />
+                  {/* 8 teeth outline (upper front teeth in a gentle arc) */}
+                  <g transform="translate(100, 158)">
+                    {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+                      const w = 10;
+                      const h = 14;
+                      const gap = 2;
+                      const totalWidth = 8 * w + 7 * gap;
+                      const x = -totalWidth / 2 + i * (w + gap) + gap / 2;
+                      const y = -4 - (i < 4 ? (3 - i) * 1.5 : (i - 4) * 1.5);
+                      return (
+                        <rect
+                          key={i}
+                          x={x}
+                          y={y}
+                          width={w}
+                          height={h}
+                          rx="1.5"
+                          ry="1.5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeDasharray="3 2"
+                        />
+                      );
+                    })}
+                  </g>
+                </svg>
+              </div>
+            ) : null}
             {cameraError ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/90 p-4 text-white">
                 <p className="text-center text-sm">{cameraError}</p>
