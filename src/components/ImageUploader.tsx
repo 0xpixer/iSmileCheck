@@ -231,11 +231,11 @@ export function ImageUploader({ onFileSelect, disabled = false }: ImageUploaderP
               autoPlay
               playsInline
               muted
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full scale-x-[-1] object-cover"
             />
             {!cameraError ? (
               <div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                className="absolute inset-0 flex items-center justify-center scale-x-[-1] pointer-events-none"
                 aria-hidden
               >
                 <svg
