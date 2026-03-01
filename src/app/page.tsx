@@ -8,12 +8,12 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col bg-white px-4 py-10 sm:px-6 sm:py-14">
       <div className="mx-auto flex flex-1 w-full max-w-4xl flex-col">
-        <div className="mx-auto flex justify-center pb-6">
+        <div className="flex items-center gap-4 pb-6">
           <a
             href="https://www.thebrightark.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="focus:outline-none focus:ring-2 focus:ring-[#F75202] focus:ring-offset-2 rounded"
+            className="focus:outline-none focus:ring-2 focus:ring-[#F75202] focus:ring-offset-2 rounded shrink-0"
           >
             <Image
               src="/logo.png"
@@ -23,6 +23,9 @@ export default function Home() {
               className="h-auto max-w-[140px] object-contain"
             />
           </a>
+          <h1 className="text-[16px] font-semibold tracking-tight text-slate-900">
+            iSmile Check
+          </h1>
         </div>
         <SmileSimulator />
       </div>

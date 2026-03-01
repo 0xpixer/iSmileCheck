@@ -150,12 +150,13 @@ export function ImageUploader({ onFileSelect, disabled = false }: ImageUploaderP
           </div>
         </div>
       ) : (
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={() => !disabled && startCamera()}
-          className="flex flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-orange-200 bg-white p-6 text-center transition hover:border-[#F75202] hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-60"
-        >
+        <div className="flex justify-center">
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => !disabled && startCamera()}
+            className="flex flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-orange-200 bg-white p-6 text-center transition hover:border-[#F75202] hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-60"
+          >
           <div className="flex size-12 items-center justify-center rounded-full bg-orange-100 text-[#F75202]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -180,6 +181,7 @@ export function ImageUploader({ onFileSelect, disabled = false }: ImageUploaderP
           <p className="text-sm font-semibold text-slate-700">Take a Photo</p>
           <p className="text-xs text-slate-500">Use your camera</p>
         </button>
+        </div>
       )}
 
       <input
