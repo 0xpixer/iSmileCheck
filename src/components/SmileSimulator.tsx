@@ -30,6 +30,10 @@ export function SmileSimulator() {
     return () => URL.revokeObjectURL(url);
   }, [sourceFile]);
 
+  useEffect(() => {
+    if (sourceFile) setIsUploadSectionExpanded(false);
+  }, [sourceFile]);
+
   const simulateSmile = async () => {
     if (!sourceFile) {
       setError("Please upload a clear front-facing smile photo first.");
