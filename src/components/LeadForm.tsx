@@ -1,25 +1,25 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { CountryCode } from "@/lib/postcodes";
-import { getAreasForPostcode } from "@/lib/postcodes";
+import { useCallback, useState } from "react";
+
+const PHONE_COUNTRY_OPTIONS = [
+  { code: "+65", label: "Singapore", flag: "🇸🇬" },
+  { code: "+62", label: "Indonesia", flag: "🇮🇩" },
+  { code: "+66", label: "Thailand", flag: "🇹🇭" },
+] as const;
 
 export type LeadFormData = {
   name: string;
+  phoneCountryCode: string;
   phone: string;
   email: string;
-  country: CountryCode;
-  postcode: string;
-  areaName: string;
 };
 
 const INITIAL_FORM: LeadFormData = {
   name: "",
+  phoneCountryCode: "+65",
   phone: "",
   email: "",
-  country: "SG",
-  postcode: "",
-  areaName: "",
 };
 
 type LeadFormProps = {
@@ -29,47 +29,20 @@ type LeadFormProps = {
 export function LeadForm({ onSubmit }: LeadFormProps) {
   const [form, setForm] = useState<LeadFormData>(INITIAL_FORM);
   const [errors, setErrors] = useState<Partial<Record<keyof LeadFormData, string>>>({});
-  const [postcodeDropdownOpen, setPostcodeDropdownOpen] = useState(false);
-  const postcodeDropdownRef = useRef<HTMLDivElement>(null);
-
-  const areaOptions = getAreasForPostcode(form.country, form.postcode);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (postcodeDropdownRef.current && !postcodeDropdownRef.current.contains(e.target as Node)) {
-        setPostcodeDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const update = useCallback((field: keyof LeadFormData, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: undefined }));
-    if (field === "country") {
-      setForm((prev) => ({ ...prev, postcode: "", areaName: "" }));
-    }
-    if (field === "postcode") {
-      setForm((prev) => ({ ...prev, areaName: "" }));
-    }
-  }, []);
-
-  const handlePostcodeSelect = useCallback((postcode: string, areaName: string) => {
-    setForm((prev) => ({ ...prev, postcode, areaName }));
-    setPostcodeDropdownOpen(false);
   }, []);
 
   const validate = useCallback((): boolean => {
     const next: Partial<Record<keyof LeadFormData, string>> = {};
     if (!form.name.trim()) next.name = "Required";
     if (!form.phone.trim()) next.phone = "Required";
-    else if (!/^[\d\s\-+()]+$/.test(form.phone)) next.phone = "Invalid phone number";
+    else if (!/^[\d\s\-()]+$/.test(form.phone)) next.phone = "Invalid phone number";
     if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       next.email = "Invalid email";
     }
-    if (!form.postcode.trim()) next.postcode = "Required";
-    if (!form.areaName.trim()) next.areaName = "Please select an area from the list";
     setErrors(next);
     return Object.keys(next).length === 0;
   }, [form]);
@@ -113,17 +86,32 @@ export function LeadForm({ onSubmit }: LeadFormProps) {
 
         <div>
           <label htmlFor="phone" className="mb-1 block text-sm font-medium text-slate-700">
-            Phone number <span className="text-red-500">*</span>
+            Phone <span className="text-red-500">*</span>
           </label>
-          <input
-            id="phone"
-            type="tel"
-            value={form.phone}
-            onChange={(e) => update("phone", e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-[#F75202] focus:outline-none focus:ring-1 focus:ring-[#F75202]"
-            placeholder="e.g. +65 9123 4567"
-            autoComplete="tel"
-          />
+          <div className="flex gap-2">
+            <select
+              id="phone-country"
+              value={form.phoneCountryCode}
+              onChange={(e) => update("phoneCountryCode", e.target.value)}
+              className="w-30 shrink-0 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-[#F75202] focus:outline-none focus:ring-1 focus:ring-[#F75202]"
+              aria-label="Country code"
+            >
+              {PHONE_COUNTRY_OPTIONS.map((opt) => (
+                <option key={opt.code} value={opt.code}>
+                  {opt.flag} {opt.code}
+                </option>
+              ))}
+            </select>
+            <input
+              id="phone"
+              type="tel"
+              value={form.phone}
+              onChange={(e) => update("phone", e.target.value)}
+              className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-[#F75202] focus:outline-none focus:ring-1 focus:ring-[#F75202]"
+              placeholder="e.g. 9123 4567"
+              autoComplete="tel-national"
+            />
+          </div>
           {errors.phone ? (
             <p className="mt-1 text-xs text-red-600">{errors.phone}</p>
           ) : null}
@@ -145,65 +133,6 @@ export function LeadForm({ onSubmit }: LeadFormProps) {
           {errors.email ? (
             <p className="mt-1 text-xs text-red-600">{errors.email}</p>
           ) : null}
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label htmlFor="country" className="mb-1 block text-sm font-medium text-slate-700">
-              Country <span className="text-red-500">*</span>
-            </label>
-            <select
-              id="country"
-              value={form.country}
-              onChange={(e) => update("country", e.target.value as CountryCode)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-[#F75202] focus:outline-none focus:ring-1 focus:ring-[#F75202]"
-            >
-              <option value="SG">Singapore</option>
-              <option value="ID">Indonesia</option>
-            </select>
-          </div>
-          <div className="relative" ref={postcodeDropdownRef}>
-            <label htmlFor="postcode" className="mb-1 block text-sm font-medium text-slate-700">
-              Post code <span className="text-red-500">*</span>
-            </label>
-            <input
-              id="postcode"
-              type="text"
-              inputMode="numeric"
-              value={form.postcode}
-              onChange={(e) => {
-                update("postcode", e.target.value);
-                setPostcodeDropdownOpen(true);
-              }}
-              onFocus={() => setPostcodeDropdownOpen(true)}
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-[#F75202] focus:outline-none focus:ring-1 focus:ring-[#F75202]"
-              placeholder={form.country === "SG" ? "e.g. 018956" : "e.g. 10110"}
-              autoComplete="off"
-            />
-            {postcodeDropdownOpen && areaOptions.length > 0 ? (
-              <div className="absolute top-full z-10 mt-1 max-h-48 w-full overflow-auto rounded-xl border border-slate-200 bg-white py-1 shadow-lg">
-                {areaOptions.map((opt, i) => (
-                  <button
-                    key={`${opt.postcode}-${opt.areaName}-${i}`}
-                    type="button"
-                    className="w-full px-4 py-2.5 text-left text-sm text-slate-800 hover:bg-orange-50"
-                    onClick={() => handlePostcodeSelect(opt.postcode, opt.areaName)}
-                  >
-                    <span className="font-medium">{opt.postcode}</span>
-                    <span className="ml-2 text-slate-500">{opt.areaName}</span>
-                  </button>
-                ))}
-              </div>
-            ) : null}
-            {form.areaName ? (
-              <p className="mt-1 text-xs text-slate-500">Area: {form.areaName}</p>
-            ) : null}
-            {errors.postcode ? (
-              <p className="mt-1 text-xs text-red-600">{errors.postcode}</p>
-            ) : errors.areaName ? (
-              <p className="mt-1 text-xs text-red-600">{errors.areaName}</p>
-            ) : null}
-          </div>
         </div>
 
         <button
