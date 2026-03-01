@@ -151,7 +151,6 @@ export async function POST(request: Request) {
       generationConfig: {
         temperature: 0.4,
         responseModalities: ["TEXT", "IMAGE"],
-        imageSize: "1K",
       },
     });
 

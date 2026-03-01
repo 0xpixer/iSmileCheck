@@ -30,10 +30,6 @@ export function SmileSimulator() {
     return () => URL.revokeObjectURL(url);
   }, [sourceFile]);
 
-  useEffect(() => {
-    if (sourceFile) setIsUploadSectionExpanded(false);
-  }, [sourceFile]);
-
   const simulateSmile = async () => {
     if (!sourceFile) {
       setError("Please upload a clear front-facing smile photo first.");
@@ -61,6 +57,7 @@ export function SmileSimulator() {
       const payload = (await response.json()) as SimulateResponse;
       setAfterImageUrl(payload.processedImageUrl);
       setSliderValue(50);
+      setIsUploadSectionExpanded(false);
     } catch (requestError) {
       const message =
         requestError instanceof Error
@@ -72,7 +69,7 @@ export function SmileSimulator() {
     }
   };
 
-  const showAsCollapsible = !!sourceFile;
+  const showAsCollapsible = !!afterImageUrl;
   const isExpanded = !showAsCollapsible || isUploadSectionExpanded;
 
   return (
