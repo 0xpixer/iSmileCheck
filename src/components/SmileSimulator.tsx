@@ -149,6 +149,25 @@ export function SmileSimulator() {
           <p className="mt-2 text-center text-xs text-slate-400">
             This is a simulation only. Actual treatment results vary.
           </p>
+          <p className="mt-2 text-center text-sm text-slate-600">
+            Save{" "}
+            <a
+              href={beforeImageUrl}
+              download="ismile-check-before.jpg"
+              className="font-medium text-[#F75202] underline hover:no-underline"
+            >
+              Before
+            </a>
+            {" & "}
+            <a
+              href={afterImageUrl}
+              download="ismile-check-after.png"
+              className="font-medium text-[#F75202] underline hover:no-underline"
+            >
+              After
+            </a>
+            {" photos"}
+          </p>
         </section>
       ) : null}
     </div>
