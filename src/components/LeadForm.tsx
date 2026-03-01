@@ -29,15 +29,17 @@ const PHONE_LENGTH_BY_CODE: Record<string, { min: number; max: number; example: 
   "+66": { min: 8, max: 9, example: "8–9 digits, e.g. 81 234 5678" },
 };
 
-/** Returns true if the local phone number is valid for the given country code. */
-function validatePhoneByCountry(phone: string, countryCode: string): { valid: boolean; message?: string } {
-  const digits = phone.replace(/\D/g, "");
+/** Returns error message or null if valid. Rejects non-digits and wrong length. */
+function validatePhoneByCountry(phone: string, countryCode: string): string | null {
+  const trimmed = phone.trim();
+  if (!trimmed) return "Required";
+  const digits = trimmed.replace(/\D/g, "");
+  if (digits.length === 0) return "Please enter digits only (spaces or dashes are ok)";
+  if (!/^[\d\s\-()]+$/.test(trimmed)) return "Please enter digits only (spaces or dashes are ok)";
   const rules = PHONE_LENGTH_BY_CODE[countryCode];
-  if (!rules) return { valid: digits.length >= 8, message: "Enter a valid phone number" };
-  if (digits.length < rules.min || digits.length > rules.max) {
-    return { valid: false, message: rules.example };
-  }
-  return { valid: true };
+  if (!rules) return digits.length >= 8 ? null : "Enter a valid phone number";
+  if (digits.length < rules.min || digits.length > rules.max) return rules.example;
+  return null;
 }
 
 /** RFC-style email validation: local@domain.tld, reasonable length. */
@@ -66,18 +68,8 @@ export function LeadForm({ onSubmit }: LeadFormProps) {
   const validate = useCallback((): boolean => {
     const next: Partial<Record<keyof LeadFormData, string>> = {};
     if (!form.name.trim()) next.name = "Required";
-    if (!form.phone.trim()) {
-      next.phone = "Required";
-    } else {
-      if (!/^[\d\s\-()]+$/.test(form.phone)) {
-        next.phone = "Please enter digits only (spaces or dashes are ok)";
-      } else {
-        const phoneCheck = validatePhoneByCountry(form.phone, form.phoneCountryCode);
-        if (!phoneCheck.valid) {
-          next.phone = phoneCheck.message ?? "Invalid phone number for this country";
-        }
-      }
-    }
+    const phoneError = validatePhoneByCountry(form.phone, form.phoneCountryCode);
+    if (phoneError) next.phone = phoneError;
     if (form.email.trim() && !validateEmail(form.email)) {
       next.email = "Please enter a valid email address (e.g. name@example.com)";
     }
