@@ -8,11 +8,15 @@ const PHONE_COUNTRY_OPTIONS = [
   { code: "+66", label: "Thailand", flag: "🇹🇭" },
 ] as const;
 
+const TERMS_URL = "https://thebrightark.com/pages/terms";
+const PRIVACY_URL = "https://thebrightark.com/pages/privacy-policy";
+
 export type LeadFormData = {
   name: string;
   phoneCountryCode: string;
   phone: string;
   email: string;
+  agreeToTerms: boolean;
 };
 
 const INITIAL_FORM: LeadFormData = {
@@ -20,6 +24,7 @@ const INITIAL_FORM: LeadFormData = {
   phoneCountryCode: "+65",
   phone: "",
   email: "",
+  agreeToTerms: false,
 };
 
 /** Phone digit length rules by country code (national number only). */
@@ -60,7 +65,7 @@ export function LeadForm({ onSubmit }: LeadFormProps) {
   const [form, setForm] = useState<LeadFormData>(INITIAL_FORM);
   const [errors, setErrors] = useState<Partial<Record<keyof LeadFormData, string>>>({});
 
-  const update = useCallback((field: keyof LeadFormData, value: string) => {
+  const update = useCallback((field: keyof LeadFormData, value: string | boolean) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: undefined }));
   }, []);
@@ -73,6 +78,7 @@ export function LeadForm({ onSubmit }: LeadFormProps) {
     if (form.email.trim() && !validateEmail(form.email)) {
       next.email = "Please enter a valid email address (e.g. name@example.com)";
     }
+    if (!form.agreeToTerms) next.agreeToTerms = "You must agree to the Terms & Conditions and Privacy Policy.";
     setErrors(next);
     return Object.keys(next).length === 0;
   }, [form]);
@@ -162,6 +168,31 @@ export function LeadForm({ onSubmit }: LeadFormProps) {
           />
           {errors.email ? (
             <p className="mt-1 text-xs text-red-600">{errors.email}</p>
+          ) : null}
+        </div>
+
+        <div className="space-y-2">
+          <label className="flex cursor-pointer items-start gap-3 text-sm text-slate-700">
+            <input
+              type="checkbox"
+              checked={form.agreeToTerms}
+              onChange={(e) => update("agreeToTerms", e.target.checked)}
+              className="mt-0.5 size-4 shrink-0 rounded border-slate-300 text-[#F75202] focus:ring-[#F75202]"
+            />
+            <span>
+              By clicking here you agree to accept our{" "}
+              <a href={TERMS_URL} target="_blank" rel="noopener noreferrer" className="text-[#F75202] underline hover:no-underline">
+                Terms
+              </a>
+              {" "}&amp; Conditions and{" "}
+              <a href={PRIVACY_URL} target="_blank" rel="noopener noreferrer" className="text-[#F75202] underline hover:no-underline">
+                Privacy Policy
+              </a>
+              , and may be contacted by BrightArk via phone, WhatsApp, SMS and other channels for the purposes described in our Privacy Policy.
+            </span>
+          </label>
+          {errors.agreeToTerms ? (
+            <p className="text-xs text-red-600">{errors.agreeToTerms}</p>
           ) : null}
         </div>
 
