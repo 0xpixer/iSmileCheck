@@ -81,7 +81,7 @@ export function SmileSimulator() {
           className="flex w-full items-center justify-between p-5 text-left sm:p-8"
           aria-expanded={isExpanded}
         >
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+          <h1 className="text-[16px] font-semibold tracking-tight text-slate-900">
             iSmile Check
           </h1>
           {showAsCollapsible ? (
