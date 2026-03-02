@@ -58,12 +58,14 @@ function validateEmail(email: string): boolean {
 }
 
 type LeadFormProps = {
-  onSubmit: (data: LeadFormData) => void;
+  onSubmit: (data: LeadFormData) => void | Promise<void>;
 };
 
 export function LeadForm({ onSubmit }: LeadFormProps) {
   const [form, setForm] = useState<LeadFormData>(INITIAL_FORM);
   const [errors, setErrors] = useState<Partial<Record<keyof LeadFormData, string>>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const update = useCallback((field: keyof LeadFormData, value: string | boolean) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -84,10 +86,18 @@ export function LeadForm({ onSubmit }: LeadFormProps) {
   }, [form]);
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
+      setSubmitError(null);
       if (!validate()) return;
-      onSubmit(form);
+      setIsSubmitting(true);
+      try {
+        await onSubmit(form);
+      } catch (err) {
+        setSubmitError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
     },
     [form, validate, onSubmit]
   );
@@ -196,11 +206,15 @@ export function LeadForm({ onSubmit }: LeadFormProps) {
           ) : null}
         </div>
 
+        {submitError ? (
+          <p className="mt-2 text-sm text-red-600">{submitError}</p>
+        ) : null}
         <button
           type="submit"
-          className="mt-6 w-full rounded-xl bg-[#F75202] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#E04A00]"
+          disabled={isSubmitting}
+          className="mt-6 w-full rounded-xl bg-[#F75202] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#E04A00] disabled:cursor-not-allowed disabled:opacity-70"
         >
-          Submit &amp; see my comparison
+          {isSubmitting ? "Saving…" : "Submit &amp; see my comparison"}
         </button>
       </form>
     </section>

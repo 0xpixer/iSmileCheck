@@ -132,7 +132,14 @@ export function SmileSimulator() {
 
       {beforeImageUrl && afterImageUrl && !formSubmitted ? (
         <LeadForm
-          onSubmit={(data: LeadFormData) => {
+          onSubmit={async (data: LeadFormData) => {
+            const res = await fetch("/api/leads", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+            const json = (await res.json()) as { error?: string };
+            if (!res.ok) throw new Error(json.error ?? "Failed to save. Please try again.");
             setFormSubmitted(true);
           }}
         />
