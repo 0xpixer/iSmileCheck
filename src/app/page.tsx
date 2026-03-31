@@ -17,14 +17,14 @@ export default function Home() {
           >
             <Image
               src="/logo.png"
-              alt="iSmile Check"
+              alt="iSmile Simulator"
               width={280}
               height={140}
               className="h-auto max-w-[140px] object-contain"
             />
           </a>
           <h1 className="text-[16px] font-semibold tracking-tight text-slate-900">
-            iSmile Check
+            iSmile Simulator
           </h1>
         </div>
         <SmileSimulator />

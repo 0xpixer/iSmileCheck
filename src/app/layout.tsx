@@ -13,8 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "iSmile Check",
-  description: "Web-based orthodontic before and after smile simulation.",
+  title: "iSmile Simulator",
+  description: "AI-powered orthodontic before and after smile simulation.",
+  icons: {
+    icon: "/BrightArk%20icon.PNG",
+  },
 };
 
 export default function RootLayout({

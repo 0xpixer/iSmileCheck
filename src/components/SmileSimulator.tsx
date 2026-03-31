@@ -99,8 +99,9 @@ export function SmileSimulator() {
         {isExpanded ? (
           <div className="border-t border-orange-100 px-5 pb-5 sm:px-8 sm:pb-8">
             <p className="mt-2 text-sm leading-6 text-slate-600 sm:text-base">
-              Upload a clear front-facing smile photo to preview a realistic orthodontic
-              alignment simulation.
+              Take Upload a clear, front-facing smile photo to preview your AI-powered alignment simulation.
+              <br />
+              Please note: this does not replace a consultation with a qualified aligner provider.
             </p>
 
             <div className="mt-6">
